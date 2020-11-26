@@ -1,0 +1,143 @@
+1.
+a.CREATE TABLE Employees (
+	EMP_ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	FIRST_NAME CHAR(25),
+	LAST_NAME CHAR(25),
+	SALARY INT(15),
+	JOINING_DATE DATETIME,
+	DEPARTMENT CHAR(25));
+ 
+ INSERT INTO Employees
+	(EMP_ID, FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT) VALUES
+		(001, 'Manish', 'Agarwal', 700000, '2019-04-20 09:00:00', 'HR'),
+		(002, 'Niranjan', 'Bose', 20000, '2019-02-11 09:00:00', 'DA'),
+		(003, 'Vivek', 'Singh', 100000, '2019-01-20 09:00:00', 'DA'),
+		(004, 'Asutosh', 'Kapoor', 700000, '2019-03-20 09:00:00', 'HR'),
+		(005, 'Vihan', 'Banerjee', 300000, '2019-06-11 09:00:00', 'DA'),
+		(006, 'Atul', 'Diwedi', 400000, '2019-05-11 09:00:00', 'Account'),
+		(007, 'Satyendra', 'Tripati', 95000, '2019-03-20 09:00:00', 'Account'),
+		(008, 'Pritika', 'Bhatt', 80000, '2019-02-11 09:00:00', 'DA');
+
+
+  CONSTRAINTS USED IN SQL:
+	NOT NULL - Makes sure that a column cannot have a NULL value
+	UNIQUE - Make sures that all values in a column are different
+	PRIMARY KEY - Uniquely identifies each row in a table
+	FOREIGN KEY - Uniquely identifies a row/record in another table
+	DEFAULT - Sets a default value for a column when no value is specified
+	AUTO INCREMENT-to perform an auto-increment feature.
+
+
+b.CREATE TABLE Variables (
+	EMP_REF_ID INT,
+	VARIABLES_DATE DATETIME,
+	VARIABLES_AMOUNT INT(10),
+	FOREIGN KEY (EMP_REF_ID)
+		REFERENCES Employees(EMP_ID)
+        ON DELETE CASCADE);
+
+ INSERT INTO Variables
+	(EMP_REF_ID, VARIABLES_DATE,VARIABLES_AMOUNT) VALUES
+		(1,'2019-02-20 00:00:00',15000),
+		(2, '2019-06-11 00:00:00',30000),
+		(3,  '2019-02-20 00:00:00',42000),
+		(4, '2019-02-20 00:00:00',14500),
+		(5, '2019-06-11 00:00:00',23500);
+ CREATE TABLE Designations(
+	EMP_REF_ID INT,
+	EMP_TITLE CHAR(25),
+	AFFECTED_FROM DATETIME,
+	FOREIGN KEY (EMP_REF_ID)
+		REFERENCES Employees(EMP_ID)
+        ON DELETE CASCADE);
+
+ INSERT INTO Designations
+	(EMP_REF_ID, EMP_TITLE, AFFECTED_FROM) VALUES
+	 (1, 'Asst.Manager', '2019-02-20 00:00:00'),
+	 (2, 'Senior Analyst', '2019-01-11 00:00:00'),
+ 	(8, 'Senior Analyst', '2019-04-06 00:00:00'),
+ 	(5, 'Manager', '2019-10-06 00:00:00'),
+ 	(4, 'Asst. Manager', '2019-12-06 00:00:00'),
+	(7, 'Team Lead', '2019-06-06 00:00:00'),
+ 	(6, 'Team Lead', '2019-09-06 00:00:00'),
+ 	(3, 'Senior Analyst', '2019-08-06 00:00:00');
+
+
+2.(INNER) JOIN: Returns records that have matching values in both tables
+	
+	SELECT Employees.EMP_ID, Designations.EMP_TITLE
+	FROM Employees
+	INNER JOIN Designations ON Employees.EMP_ID=Designations.EMP_REF_ID;
+
+
+  LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+
+	SELECT Employees.EMP_ID, Designations.EMP_TITLE
+	FROM Employees
+	LEFT JOIN Designations ON Employees.EMP_ID=Designations.EMP_REF_ID;
+
+  RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+
+	SELECT Employees.EMP_ID, Designations.EMP_TITLE
+	FROM Employees
+	RIGHT JOIN Designations ON Employees.EMP_ID=Designations.EMP_REF_ID;
+
+  FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+
+	SELECT Employees.EMP_ID, Designations.EMP_TITLE
+	FROM Employees
+	FULL OUTER JOIN Designations ON Employees.EMP_ID=Designations.EMP_REF_ID;
+ 
+
+ a.)
+	SELECT CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) As EMPLONAME, e.DEPARTMENT
+	FROM Employees e,Designations d where Employees.EMP_ID=Designations.EMP_REF_ID AND d.VARIABLES_AMOUNT IN
+        (SELECT VARIABLES_AMOUNT FROM Designations ORDER BY Salary DESC LIMIT 1);
+
+	SELECT CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) As EMPLONAME, e.DEPARTMENT
+	FROM Employees e,Designations d where Employees.EMP_ID=Designations.EMP_REF_ID AND d.VARIABLES_AMOUNT IN
+        (SELECT VARIABLES_AMOUNT FROM Designations ORDER BY Salary ASC LIMIT 1);
+
+
+ c.)    CROSS JOIN - SQL CROSS JOIN produces a result set which is the number of rows in the first table multiplied by the number of rows
+	in the second table if no WHERE clause is used along with CROSS JOIN.
+
+	SELECT Employees.EMP_NAME,Designations.VARIABLES_AMOUNT 
+	FROM Employee 
+	CROSS JOIN Designations;
+ 
+ d.)    SELECT STATEMENT CLAUSES WITH LOGICAL ORDER-
+	FROM,WHERE,GROUP BY,HAVING,SELECT,ORDER BY,OFFSET,FETCH FIRST,UNION,INTERSECT,EXCEPT,WITH
+
+   
+3. A cursor is a pointer to the context area.Cursors hold rows returned by statements
+
+    a.)
+	TYPES OF NORMALISATION
+	First normal form (1NF)
+        As per the rule of first normal form, an attribute (column) of a table cannot hold multiple values. It should hold only atomic values.
+	
+	Second normal form (2NF)
+	A table is said to be in 2NF if both the following conditions hold:
+	Table is in 1NF (First normal form)
+	No non-prime attribute is dependent on the proper subset of any candidate key of table.
+
+
+	Third Normal form (3NF)
+	A table design is said to be in 3NF if both the following conditions hold:
+
+	Table must be in 2NF
+	Transitive functional dependency of non-prime attribute on any super key should be removed
+
+   b.)
+        STORED PROCEDURE-
+	A stored procedure is a group of SQL statements that has been created and stored in the database.
+	
+	CREATE PROCEDURE t1_ex
+        AS
+    	SELECT CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) As EMPLONAME, e.DEPARTMENT
+	FROM Employees e,Designations d where Employees.EMP_ID=Designations.EMP_REF_ID AND d.VARIABLES_AMOUNT IN
+        (SELECT VARIABLES_AMOUNT FROM Designations ORDER BY Salary DESC LIMIT 1);
+
+	EXEC t1_ex;
+
